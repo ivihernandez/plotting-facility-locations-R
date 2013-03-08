@@ -1,0 +1,16 @@
+library(ggplot2)
+library(reshape)
+pareto <- combined.pareto.2
+pareto <- subset(pareto, (get_deployed_facilities > 0) & (get_total_distance < 2147483647) & (get_total_distance_after_interdiction< 2147483647) & (get_interdicted_facilities!=0))
+colnames(pareto) <- c("Facilities", "No Failure", "Failure", "Failures")
+pareto <- subset(pareto, Failures ==19 | Failures ==20)
+melted <- melt(pareto, id=c("Facilities","Failures"))
+plot <- ggplot(melted, aes(x=Facilities,y=value, fill=variable)) + geom_bar(stat="identity") + facet_grid(Failures~.)
+plot <- plot + theme_bw(18)
+plot <- plot + xlab('Facilities') + ylab('Distance')
+plot <- plot + theme(axis.title.y = element_text( face='bold'))
+plot <- plot + theme(axis.title.x = element_text( face='bold'))
+plot <- plot + theme(legend.position="top")
+plot <- plot + labs(fill='Type')
+plot <- plot + scale_fill_grey()
+
